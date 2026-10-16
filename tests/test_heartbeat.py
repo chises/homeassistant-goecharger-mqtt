@@ -60,6 +60,20 @@ async def test_heartbeat_makes_available(hass: HomeAssistant, entry_with_mocks):
     assert entry.runtime_data.last_update_success is True
 
 
+async def test_status_heartbeat_detects_v1(hass: HomeAssistant, entry_with_mocks):
+    """A valid status message detects the v1 API and marks it available."""
+    entry, mqtt_cbs, _ = entry_with_mocks
+    status = {"amp": 16}
+
+    mqtt_cbs[f"{TOPIC}/status"](
+        MagicMock(topic=f"{TOPIC}/status", payload='{"amp": 16}')
+    )
+    await hass.async_block_till_done()
+
+    assert entry.runtime_data.data == status
+    assert entry.runtime_data.last_update_success is True
+
+
 async def test_timeout_makes_unavailable(hass: HomeAssistant, entry_with_mocks):
     """10-second silence marks device unavailable."""
     entry, mqtt_cbs, timer_cbs = entry_with_mocks

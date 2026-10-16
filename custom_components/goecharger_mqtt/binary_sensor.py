@@ -3,15 +3,13 @@
 import logging
 
 from homeassistant import config_entries, core
-from homeassistant.components import mqtt
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.core import callback
 
 from .definitions.binary_sensor import (
     BINARY_SENSORS,
     GoEChargerBinarySensorEntityDescription,
 )
-from .entity import GoEChargerEntity
+from .entity import GoEChargerEntity, async_add_supported_entities
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,10 +48,11 @@ async def async_setup_entry(
     #         f"| `{description.key}` | {description.name} | {entity_category} | {entity_registry_enabled} | {supported} | {reason} |"
     #     )
 
-    async_add_entities(
-        GoEChargerBinarySensor(config_entry, description)
-        for description in BINARY_SENSORS
-        if not description.disabled
+    async_add_supported_entities(
+        config_entry,
+        BINARY_SENSORS,
+        lambda description: GoEChargerBinarySensor(config_entry, description),
+        async_add_entities,
     )
 
 
@@ -76,20 +75,19 @@ class GoEChargerBinarySensor(GoEChargerEntity, BinarySensorEntity):
         """Subscribe to MQTT events."""
         await super().async_added_to_hass()
 
-        @callback
-        def message_received(message):
+        def message_received(payload):
             """Handle new MQTT messages."""
             if self.entity_description.state is not None:
                 self._attr_is_on = self.entity_description.state(
-                    message.payload, self.entity_description.attribute
+                    payload, self.entity_description.attribute
                 )
-            elif message.payload == "true":
+            elif payload in ("true", "1"):
                 self._attr_is_on = True
-            elif message.payload == "false":
+            elif payload in ("false", "0"):
                 self._attr_is_on = False
             else:
                 self._attr_is_on = None
 
             self.async_write_ha_state()
 
-        await mqtt.async_subscribe(self.hass, self._topic, message_received, 1)
+        await self.async_subscribe(message_received)

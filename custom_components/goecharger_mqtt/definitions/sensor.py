@@ -45,7 +45,7 @@ def extract_charging_duration(value, attribute) -> int | None:
     Example value: {"type":1,"value":0}
     """
     data = json.loads(value)
-    if "type" in data and data["type"] == int(attribute):
+    if isinstance(data, dict) and data.get("type") == int(attribute):
         return data["value"]
 
     return None
