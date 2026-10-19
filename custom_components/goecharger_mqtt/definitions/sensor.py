@@ -992,6 +992,18 @@ SENSORS: tuple[GoEChargerSensorEntityDescription, ...] = (
         disabled_reason="Not exposed via MQTT in firmware 053.1",
     ),
     GoEChargerSensorEntityDescription(
+        key="dws",
+        name="Charged energy this session",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+        state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:lightning-bolt",
+        entity_registry_enabled_default=True,
+        disabled=False,
+        api_version=API_VERSION_V1,
+    ),
+    GoEChargerSensorEntityDescription(
         key="lrn",
         name="Learn card",
         entity_category=None,

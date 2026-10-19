@@ -183,6 +183,7 @@ This manual method achieves the same result as the HACS installation but require
 | `err` | Error | `diagnostic` |  | :heavy_check_mark: | :heavy_check_mark: | |
 | `err` | Error code | `diagnostic` |  | :white_large_square: | :heavy_check_mark: | |
 | `esr` | RTC reset reason | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
+| `dws` | Charged energy this session | `diagnostic` | Wh | :heavy_check_mark: | :white_large_square: | [^4] [^5] |
 | `eto` | Total energy | `diagnostic` | Wh | :heavy_check_mark: | :heavy_check_mark: | [^5] |
 | `etop` | Total energy persisted | `diagnostic` | Wh | :white_large_square: | :white_large_square: | [^1] [^3] |
 | `ffb` | Lock feedback | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
