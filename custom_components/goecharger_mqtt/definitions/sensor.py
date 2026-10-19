@@ -25,6 +25,7 @@ from homeassistant.const import (
 )
 from homeassistant.helpers.entity import EntityCategory
 
+from ..const import API_VERSION_V1, API_VERSION_V2
 from . import GoEChargerEntityDescription
 
 _LOGGER = logging.getLogger(__name__)
@@ -1024,6 +1025,18 @@ SENSORS: tuple[GoEChargerSensorEntityDescription, ...] = (
     ),
     GoEChargerSensorEntityDescription(
         key="amt",
+        name="Maximum current",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.CURRENT,
+        native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
+        state_class=SensorStateClass.MEASUREMENT,
+        entity_registry_enabled_default=True,
+        disabled=False,
+        translation_key="amt_v1",
+        api_version=API_VERSION_V1,
+    ),
+    GoEChargerSensorEntityDescription(
+        key="amt",
         name="Current temperature limit",
         entity_category=EntityCategory.DIAGNOSTIC,
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -1031,6 +1044,7 @@ SENSORS: tuple[GoEChargerSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=True,
         disabled=False,
+        api_version=API_VERSION_V2,
     ),
     GoEChargerSensorEntityDescription(
         key="atp",
@@ -1123,6 +1137,7 @@ SENSORS: tuple[GoEChargerSensorEntityDescription, ...] = (
         icon="mdi:timer-outline",
         entity_registry_enabled_default=True,
         disabled=False,
+        api_version=API_VERSION_V2,
     ),
     GoEChargerSensorEntityDescription(
         key="cdi",
@@ -1136,6 +1151,7 @@ SENSORS: tuple[GoEChargerSensorEntityDescription, ...] = (
         icon="mdi:counter",
         entity_registry_enabled_default=False,
         disabled=False,
+        api_version=API_VERSION_V2,
     ),
     GoEChargerSensorEntityDescription(
         key="cus",

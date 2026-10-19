@@ -15,6 +15,8 @@ from homeassistant.helpers.update_coordinator import (
 from homeassistant.util import slugify
 
 from .const import (
+    API_VERSION_V1,
+    API_VERSION_V2,
     CONF_TOPIC,
     DEVICE_INFO_MANUFACTURER,
     DEVICE_INFO_MODEL,
@@ -33,7 +35,7 @@ def async_add_supported_entities(
     create_entity,
     async_add_entities,
 ) -> None:
-    """Add entities after detecting the API and exclude missing v1 fields."""
+    """Add entities for the detected API and exclude missing v1 fields."""
     coordinator: DataUpdateCoordinator = config_entry.runtime_data
     added = False
 
@@ -48,11 +50,18 @@ def async_add_supported_entities(
             return
 
         added = True
+        # in v1 a single topic is used for all parameters, so data is a dict (json)
+        # in v2 every is a indiviual topic, data is a single value
+        api_version = API_VERSION_V1 if isinstance(data, dict) else API_VERSION_V2
         async_add_entities(
             create_entity(description)
             for description in descriptions
             if not description.disabled
             and (not isinstance(data, dict) or description.key in data)
+            and (
+                description.api_version is None
+                or description.api_version == api_version
+            )
         )
 
     remove_listener = coordinator.async_add_listener(add_entities_if_supported)

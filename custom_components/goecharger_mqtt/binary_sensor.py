@@ -5,6 +5,7 @@ import logging
 from homeassistant import config_entries, core
 from homeassistant.components.binary_sensor import BinarySensorEntity
 
+from .const import API_VERSION_V1
 from .definitions.binary_sensor import (
     BINARY_SENSORS,
     GoEChargerBinarySensorEntityDescription,
@@ -70,6 +71,23 @@ class GoEChargerBinarySensor(GoEChargerEntity, BinarySensorEntity):
         self.entity_description = description
 
         super().__init__(config_entry, description)
+
+    @property
+    def icon(self) -> str | None:
+        """
+        set correct icon based on v1 "cdi" (cloud disabled) logic
+        0 = cloud enabled
+        1 = cloud disabled
+        """
+        if (
+            self.entity_description.key == "cdi"
+            and self.entity_description.api_version == API_VERSION_V1
+        ):
+            if self.is_on is None:
+                return "mdi:cloud-question-outline"
+            return "mdi:cloud-off-outline" if self.is_on else "mdi:cloud-check-outline"
+
+        return super().icon
 
     async def async_added_to_hass(self):
         """Subscribe to MQTT events."""
