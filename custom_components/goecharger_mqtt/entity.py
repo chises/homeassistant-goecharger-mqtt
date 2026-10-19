@@ -201,45 +201,86 @@ def _format_v1_value(value: str | float | None) -> str:
 def _v1_status_payload(key: str, value: object) -> str | None:
     """Convert one v1 status field to the entity's expected MQTT payload."""
     if key == "pha":
-        try:
-            phase_mask = int(value)
-        except (TypeError, ValueError):
-            _LOGGER.warning("Invalid phase status in go-eCharger payload")
+        value = _v1_phase_status(value)
+        if value is None:
             return None
-        value = [bool(phase_mask & (1 << bit)) for bit in range(6)]
     elif key in ("dws", "dwo", "eto") and value is not None:
-        try:
-            numeric_value = float(value)
-        except (TypeError, ValueError):
-            _LOGGER.warning("Invalid %s value in go-eCharger payload", key)
+        value = _v1_scaled_status(key, value)
+        if value is None:
+            return None
+    elif key == "nrg" and isinstance(value, list):
+        value = _v1_energy_status(value)
+        if value is None:
             return None
 
-        factor = {"dws": 1 / 360, "dwo": 100, "eto": 100}[key]
-        value = numeric_value * factor
-        if value.is_integer():
-            value = int(value)
-    elif key == "nrg" and isinstance(value, list):
-        value = value.copy()
-        for index, factor in {
-            4: 0.1,
-            5: 0.1,
-            6: 0.1,
-            7: 100,
-            8: 100,
-            9: 100,
-            10: 100,
-            11: 10,
-        }.items():
-            if index < len(value):
-                try:
-                    value[index] = float(value[index]) * factor
-                except (TypeError, ValueError):
-                    _LOGGER.warning(
-                        "Invalid nrg value at index %s in go-eCharger payload",
-                        index,
-                    )
-                    return None
+    return _serialize_v1_status_value(value)
 
+
+def _v1_phase_status(value: object) -> list[bool] | None:
+    """Convert the v1 phase bitmask to a list of phase states."""
+    if not isinstance(value, (str, int, float)):
+        _LOGGER.warning("Invalid phase status in go-eCharger payload")
+        return None
+    try:
+        phase_mask = int(value)
+    except (TypeError, ValueError):
+        _LOGGER.warning("Invalid phase status in go-eCharger payload")
+        return None
+    return [bool(phase_mask & (1 << bit)) for bit in range(6)]
+
+
+def _v1_scaled_status(key: str, value: object) -> float | int | None:
+    """Scale a numeric v1 status value to the entity's expected unit."""
+    if not isinstance(value, (str, int, float)):
+        _LOGGER.warning("Invalid %s value in go-eCharger payload", key)
+        return None
+    try:
+        numeric_value = float(value)
+    except (TypeError, ValueError):
+        _LOGGER.warning("Invalid %s value in go-eCharger payload", key)
+        return None
+
+    factor = {"dws": 1 / 360, "dwo": 100, "eto": 100}[key]
+    scaled_value = numeric_value * factor
+    if scaled_value.is_integer():
+        return int(scaled_value)
+    return scaled_value
+
+
+def _v1_energy_status(value: list[object]) -> list[object] | None:
+    """Scale the numeric fields in the v1 energy status array."""
+    scaled_value = value.copy()
+    for index, factor in {
+        4: 0.1,
+        5: 0.1,
+        6: 0.1,
+        7: 100,
+        8: 100,
+        9: 100,
+        10: 100,
+        11: 10,
+    }.items():
+        if index < len(scaled_value):
+            item = scaled_value[index]
+            if not isinstance(item, (str, int, float)):
+                _LOGGER.warning(
+                    "Invalid nrg value at index %s in go-eCharger payload",
+                    index,
+                )
+                return None
+            try:
+                scaled_value[index] = float(item) * factor
+            except (TypeError, ValueError):
+                _LOGGER.warning(
+                    "Invalid nrg value at index %s in go-eCharger payload",
+                    index,
+                )
+                return None
+    return scaled_value
+
+
+def _serialize_v1_status_value(value: object) -> str:
+    """Serialize a converted v1 status value as an MQTT payload."""
     if value is None:
         return "null"
     if isinstance(value, (list, dict)):
