@@ -207,6 +207,17 @@ def _v1_status_payload(key: str, value: object) -> str | None:
             _LOGGER.warning("Invalid phase status in go-eCharger payload")
             return None
         value = [bool(phase_mask & (1 << bit)) for bit in range(6)]
+    elif key in ("dws", "dwo", "eto") and value is not None:
+        try:
+            numeric_value = float(value)
+        except (TypeError, ValueError):
+            _LOGGER.warning("Invalid %s value in go-eCharger payload", key)
+            return None
+
+        factor = {"dws": 1 / 360, "dwo": 100, "eto": 100}[key]
+        value = numeric_value * factor
+        if value.is_integer():
+            value = int(value)
     elif key == "nrg" and isinstance(value, list):
         value = value.copy()
         for index, factor in {
@@ -218,17 +229,13 @@ def _v1_status_payload(key: str, value: object) -> str | None:
             9: 100,
             10: 100,
             11: 10,
-            12: 0.01,
-            13: 0.01,
-            14: 0.01,
-            15: 0.01,
         }.items():
             if index < len(value):
                 try:
                     value[index] = float(value[index]) * factor
                 except (TypeError, ValueError):
                     _LOGGER.warning(
-                        "Invalid energy value at index %s in go-eCharger payload",
+                        "Invalid nrg value at index %s in go-eCharger payload",
                         index,
                     )
                     return None

@@ -30,6 +30,11 @@ async def async_setup_entry(
             if description.key in _CURRENT_LIMITED_KEYS
             else description
         )
+        if (
+            description.key == "dwo"
+            and isinstance(config_entry.runtime_data.data, dict)
+        ):
+            desc = dataclasses.replace(desc, native_step=100)
         return GoEChargerNumber(config_entry, desc)
 
     async_add_supported_entities(
@@ -57,6 +62,13 @@ class GoEChargerNumber(GoEChargerEntity, NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
+        if (
+            isinstance(self.coordinator.data, dict)
+            and self.entity_description.key == "dwo"
+        ):
+            await self.async_publish_value(round(value / 100))
+            return
+
         if self.native_step == 1:
             await self.async_publish_value(int(value))
         else:

@@ -183,7 +183,7 @@ This manual method achieves the same result as the HACS installation but require
 | `err` | Error | `diagnostic` |  | :heavy_check_mark: | :heavy_check_mark: | |
 | `err` | Error code | `diagnostic` |  | :white_large_square: | :heavy_check_mark: | |
 | `esr` | RTC reset reason | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
-| `eto` | Total energy | `diagnostic` | Wh | :heavy_check_mark: | :heavy_check_mark: | |
+| `eto` | Total energy | `diagnostic` | Wh | :heavy_check_mark: | :heavy_check_mark: | [^5] |
 | `etop` | Total energy persisted | `diagnostic` | Wh | :white_large_square: | :white_large_square: | [^1] [^3] |
 | `ffb` | Lock feedback | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
 | `ffba` | Lock feedback age | `diagnostic` | ms | :white_large_square: | :white_large_square: | [^1] [^3] |
@@ -209,22 +209,22 @@ This manual method achieves the same result as the HACS installation but require
 | `modelStatus` | Status | `diagnostic` |  | :heavy_check_mark: | :heavy_check_mark: | [^3] |
 | `modelStatus` | Status code | `diagnostic` |  | :white_large_square: | :heavy_check_mark: | [^3] |
 | `msi` | Reason why we allow charging or not | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
-| `nrg` | Voltage L1 | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Voltage L2 | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Voltage L3 | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Voltage N | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Current L1 | `diagnostic` | A | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Current L2 | `diagnostic` | A | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Current L3 | `diagnostic` | A | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power L1 | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power L2 | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power L3 | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power N | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Current power | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power factor L1 | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power factor L2 | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power factor L3 | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | |
-| `nrg` | Power factor N | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | |
+| `nrg` | Voltage L1 | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Voltage L2 | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Voltage L3 | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Voltage N | `diagnostic` | V | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Current L1 | `diagnostic` | A | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Current L2 | `diagnostic` | A | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Current L3 | `diagnostic` | A | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power L1 | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power L2 | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power L3 | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power N | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Current power | `diagnostic` | W | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power factor L1 | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power factor L2 | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power factor L3 | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | [^5] |
+| `nrg` | Power factor N | `diagnostic` | % | :heavy_check_mark: | :heavy_check_mark: | [^5] |
 | `oca` | OTA cloud app description | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
 | `ocl` | OTA from cloud length | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
 | `ocm` | OTA from cloud message | `diagnostic` |  | :white_large_square: | :white_large_square: | [^1] [^3] |
@@ -303,7 +303,7 @@ This manual method achieves the same result as the HACS installation but require
 | `ate` | Automatic stop energy | `config` | :heavy_check_mark: | :heavy_check_mark: | [^3] |
 | `att` | Automatic stop time | `config` | :heavy_check_mark: | :heavy_check_mark: | [^3] |
 | `awp` | Awattar maximum price threshold | `config` | :heavy_check_mark: | :heavy_check_mark: | [^3] |
-| `dwo` | Charging energy limit | `config` | :heavy_check_mark: | :heavy_check_mark: | |
+| `dwo` | Charging energy limit | `config` | :heavy_check_mark: | :heavy_check_mark: | [^5] |
 | `lop` | Load balancing priority | `config` | :white_large_square: | :white_large_square: | [^1] |
 | `pgt` | Grid target | `config` | :heavy_check_mark: | :heavy_check_mark: | [^2] [^3] |
 | `fst` | PV surplus starting power | `config` | :heavy_check_mark: | :heavy_check_mark: | [^3] |
@@ -406,9 +406,11 @@ details please see https://github.com/goecharger/go-eCharger-API-v2/issues/35.
 
 * https://github.com/goecharger/go-eCharger-API-v2/blob/main/mqtt-en.md
 * https://github.com/goecharger/go-eCharger-API-v2/blob/main/apikeys-en.md
+* https://github.com/goecharger/go-eCharger-API-v1/blob/master/go-eCharger%20API%20v1%20DE.md
 * https://github.com/boralyl/github-custom-component-tutorial
 
 [^1]: Not exposed via MQTT in firmware 053.1
 [^2]: Exposed via MQTT since firmware 056.2
 [^3]: Not available in v1 Devices
 [^4]: Not available in v2 Devices
+[^5]: V1 `eto` and `dwo` values (0.1 kWh), `dws` values (10 Ws), and the scaled current/power fields in `nrg` are converted to the entity's displayed unit. Power-factor values in `nrg` are already percentages.
