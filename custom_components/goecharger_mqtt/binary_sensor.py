@@ -74,7 +74,8 @@ class GoEChargerBinarySensor(GoEChargerEntity, BinarySensorEntity):
 
     @property
     def icon(self) -> str | None:
-        """ Set correct icon based on v1 "cdi" (cloud disabled) logic.
+        """Set the icon based on v1 "cdi" (cloud disabled) logic.
+
         0 = cloud enabled
         1 = cloud disabled
         """

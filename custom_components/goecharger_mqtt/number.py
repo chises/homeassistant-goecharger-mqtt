@@ -30,9 +30,8 @@ async def async_setup_entry(
             if description.key in _CURRENT_LIMITED_KEYS
             else description
         )
-        if (
-            description.key == "dwo"
-            and isinstance(config_entry.runtime_data.data, dict)
+        if description.key == "dwo" and isinstance(
+            config_entry.runtime_data.data, dict
         ):
             desc = dataclasses.replace(desc, native_step=100)
         return GoEChargerNumber(config_entry, desc)

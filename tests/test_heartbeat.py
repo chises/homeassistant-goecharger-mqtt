@@ -57,6 +57,7 @@ async def test_heartbeat_makes_available(hass: HomeAssistant, entry_with_mocks):
     mqtt_cbs[f"{TOPIC}/utc"](MagicMock())
     await hass.async_block_till_done()
 
+    assert entry.runtime_data.data == "v2"
     assert entry.runtime_data.last_update_success is True
 
 

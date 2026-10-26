@@ -51,7 +51,7 @@ def async_add_supported_entities(
 
         added = True
         # in v1 a single topic is used for all parameters, so data is a dict (json)
-        # in v2 every is a indiviual topic, data is a single value
+        # in v2 every value uses an individual topic, data is a single value
         api_version = API_VERSION_V1 if isinstance(data, dict) else API_VERSION_V2
         async_add_entities(
             create_entity(description)

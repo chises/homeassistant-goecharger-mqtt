@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+from typing import Any
 
 from homeassistant.components import mqtt
 from homeassistant.config_entries import ConfigEntry
@@ -96,7 +97,7 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up go-eCharger (MQTT) from a config entry."""
-    coordinator: DataUpdateCoordinator = DataUpdateCoordinator(
+    coordinator: DataUpdateCoordinator[dict[str, Any] | str] = DataUpdateCoordinator(
         hass,
         _LOGGER,
         config_entry=entry,
@@ -127,7 +128,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         if _timeout_handle:
             _timeout_handle.cancel()
-        coordinator.async_set_updated_data("v2" if version == API_VERSION_V2 else data)
+        if version == API_VERSION_V2:
+            updated_data = API_VERSION_V2
+        else:
+            assert data is not None
+            updated_data = data
+        coordinator.async_set_updated_data(updated_data)
         _timeout_handle = hass.loop.call_later(HEARTBEAT_TIMEOUT, _on_timeout)
 
     @callback
